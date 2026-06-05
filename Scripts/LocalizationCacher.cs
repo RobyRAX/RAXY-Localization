@@ -59,7 +59,15 @@ namespace RAXY.Utility.Localization
         /// Get the localized string, fetching from cache if possible.
         /// Automatically refreshes when locale or entry changes.
         /// </summary>
-        public async UniTask<string> GetStringAsync()
+        public UniTask<string> GetStringAsync()
+        {
+            if (!Application.isPlaying)
+                return GetStringInternalAsync();
+
+            return LocalizationManager.GetStringAsync(this);
+        }
+
+        internal async UniTask<string> GetStringInternalAsync()
         {
             if (localizedString == null)
             {
@@ -87,17 +95,31 @@ namespace RAXY.Utility.Localization
                 }
             }
 
-            return await RefreshCacheAsync();
+            return await RefreshCacheInternalAsync();
         }
 
         /// <summary>
         /// Forces re-fetch of the localized string.
         /// </summary>
-        public async UniTask<string> RefreshCacheAsync()
+        public UniTask<string> RefreshCacheAsync()
+        {
+            if (!Application.isPlaying)
+                return RefreshCacheInternalAsync();
+
+            return LocalizationManager.RefreshCacheAsync(this);
+        }
+
+        internal async UniTask<string> RefreshCacheInternalAsync()
         {
             if (localizedString == null)
             {
                 ResetCache(UNSET_STRING);
+                return _cachedString;
+            }
+
+            if (_cachingInProgress)
+            {
+                await UniTask.WaitUntil(() => !_cachingInProgress);
                 return _cachedString;
             }
 
