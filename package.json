@@ -4,6 +4,11 @@
   "displayName": "RAXY Localization",
   "author": {
     "name": "RobyRAX"
+  },
+  "dependencies": {
+    "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
+    "com.unity.addressables": "3.1.0",
+    "com.unity.localization": "1.5.12"
   }
 }
 
