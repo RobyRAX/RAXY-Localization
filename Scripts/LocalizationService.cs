@@ -9,22 +9,22 @@ using UnityEngine.Localization.Settings;
 
 namespace RAXY.Utility.Localization
 {
-    public class LocalizationManager : MonoBehaviour
+    public class LocalizationService : MonoBehaviour
     {
-        private static LocalizationManager _instance;
+        private static LocalizationService _instance;
 
-        public static LocalizationManager Instance
+        public static LocalizationService Instance
         {
             get
             {
                 if (_instance == null)
                 {
-                    _instance = FindAnyObjectByType<LocalizationManager>();
+                    _instance = FindAnyObjectByType<LocalizationService>();
 
                     if (_instance == null && Application.isPlaying)
                     {
-                        var go = new GameObject(nameof(LocalizationManager));
-                        _instance = go.AddComponent<LocalizationManager>();
+                        var go = new GameObject(nameof(LocalizationService));
+                        _instance = go.AddComponent<LocalizationService>();
                         DontDestroyOnLoad(go);
                     }
 
@@ -125,6 +125,22 @@ namespace RAXY.Utility.Localization
 
             Register(cacher);
             return await cacher.RefreshCacheInternalAsync();
+        }
+
+        public static async UniTask<string> GetStringAsync(StringProvider provider)
+        {
+            if (provider.useLocalization)
+                return await GetStringAsync(provider.stringLoc);
+            else
+                return provider.directString;
+        }
+
+        public static async UniTask<string> RefreshCacheAsync(StringProvider provider)
+        {
+            if (provider.useLocalization)
+                return await RefreshCacheAsync(provider.stringLoc);
+            else
+                return provider.directString;
         }
 
         public static UniTask RefreshTrackedCachesAsync()

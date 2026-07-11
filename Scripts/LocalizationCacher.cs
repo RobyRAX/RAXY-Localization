@@ -59,12 +59,12 @@ namespace RAXY.Utility.Localization
         /// Get the localized string, fetching from cache if possible.
         /// Automatically refreshes when locale or entry changes.
         /// </summary>
-        public UniTask<string> GetStringAsync()
+        public async UniTask<string> GetStringAsync()
         {
             if (!Application.isPlaying)
-                return GetStringInternalAsync();
+                return await GetStringInternalAsync();
 
-            return LocalizationManager.GetStringAsync(this);
+            return await LocalizationService.GetStringAsync(this);
         }
 
         internal async UniTask<string> GetStringInternalAsync()
@@ -101,12 +101,12 @@ namespace RAXY.Utility.Localization
         /// <summary>
         /// Forces re-fetch of the localized string.
         /// </summary>
-        public UniTask<string> RefreshCacheAsync()
+        public async UniTask<string> RefreshCacheAsync()
         {
             if (!Application.isPlaying)
-                return RefreshCacheInternalAsync();
+                return await RefreshCacheInternalAsync();
 
-            return LocalizationManager.RefreshCacheAsync(this);
+            return await LocalizationService.RefreshCacheAsync(this);
         }
 
         internal async UniTask<string> RefreshCacheInternalAsync()
